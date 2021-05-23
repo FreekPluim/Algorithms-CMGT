@@ -72,7 +72,8 @@ class AlgorithmsAssignment : Game
 		//TODO: Study the SampleDungeon class and try it out below
 		//TODO: Comment out SampleDungeon below, implement a SufficientDungeon class and uncomment it below
 
-		_dungeon = new SampleDungeon(size);
+		_dungeon = new SufficientDungeon(size);
+
 		//_dungeon = new SufficientDungeon(size);
 
 		/////////////////////////////////
