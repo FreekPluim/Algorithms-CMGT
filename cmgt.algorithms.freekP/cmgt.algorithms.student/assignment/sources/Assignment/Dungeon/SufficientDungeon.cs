@@ -1,4 +1,6 @@
 ﻿using GXPEngine;
+using GXPEngine.OpenGL;
+using System.Collections.Generic;
 using System.Drawing;
 
 /**
@@ -19,39 +21,47 @@ class SufficientDungeon : Dungeon
 	 * - playing/experiment freely is the key to all success
 	 * - this problem can be solved both iteratively or recursively
 	 */
+
 	protected override void generate(int pMinimumRoomSize)
 	{
-		//left room from 0 to half of screen + 1 (so that the walls overlap with the right room)
-		//(TODO: experiment with removing the +1 below to see what happens with the walls)
-		bool once = false;
-		rooms.Add(new Room(new Rectangle(0, 0, size.Width / 2 + 1, size.Height)));
-		rooms.Add(new Room(new Rectangle(size.Width / 2, 0, size.Width / 2, size.Height)));
-        if (!once)
-        {
-            for (int i = 0; i < rooms.Count; i++)
-            {
-                if (rooms[i].area.Width <= rooms[i].area.Height && rooms[i].area.Height >= pMinimumRoomSize)
-                {
-                    //int wallPos = Utils.Random(-5, 5);
-                    rooms.Add(new Room(new Rectangle(rooms[i].area.X, rooms[i].area.Y, rooms[i].area.Width, rooms[i].area.Height / 2 + 1)));
-                    rooms.Add(new Room(new Rectangle(rooms[i].area.X, rooms[i].area.Height / 2, rooms[i].area.Width, rooms[i].area.Height/2)));
-                }
+		rooms.Add(new Room(new Rectangle(0, 0, size.Width, size.Height)));
 
-                if (rooms[i].area.Width >= rooms[i].area.Height && rooms[i].area.Width >= pMinimumRoomSize)
+        for (int i = rooms.Count - 1; i >= 0; i--)
+        {
+            if (rooms[i].area.Width >= (pMinimumRoomSize * 2) || rooms[i].area.Height >= (pMinimumRoomSize * 2))
+            {
+                if (rooms[i].area.Width <= rooms[i].area.Height)
                 {
-                    rooms.Add(new Room(new Rectangle(rooms[i].area.X, rooms[i].area.Y, rooms[i].area.Width/ 2 + 1, rooms[i].area.Height)));
-                    rooms.Add(new Room(new Rectangle(rooms[i].area.Width/2, rooms[i].area.Y, rooms[i].area.Width/2, rooms[i].area.Height)));
+                    int begin = rooms[i].area.Y + pMinimumRoomSize;
+                    int end = rooms[i].area.Y + rooms[i].area.Height - pMinimumRoomSize;
+                    int wallPos = Utils.Random(begin, end + 1);
+                    rooms.Add(new Room(new Rectangle(rooms[i].area.X, rooms[i].area.Y, rooms[i].area.Width, wallPos - rooms[i].area.Y + 1)));
+                    rooms.Add(new Room(new Rectangle(rooms[i].area.X, wallPos, rooms[i].area.Width, (rooms[i].area.Y + rooms[i].area.Height) - wallPos)));
+                }
+                else
+                {
+                    int begin = rooms[i].area.X + pMinimumRoomSize;
+                    int end = rooms[i].area.X + rooms[i].area.Width - pMinimumRoomSize;
+                    int wallPos = Utils.Random(begin, end + 1);
+                    rooms.Add(new Room(new Rectangle(rooms[i].area.X, rooms[i].area.Y, wallPos - rooms[i].area.X + 1, rooms[i].area.Height)));
+                    rooms.Add(new Room(new Rectangle(wallPos, rooms[i].area.Y, (rooms[i].area.X + rooms[i].area.Width) - wallPos, rooms[i].area.Height)));
                 }
             }
-            once = true;
+            rooms.RemoveAt(i);
         }
-        //rooms.Add(new Room(new Rectangle(0, 0, size.Width / 2 + 1, size.Height)));
+        
+        Room FindRoom()
+        {
 
+            return null;
+        }
 
-        //right room from half of screen to the end
+        void SplitRoom()
+        {
 
-
-
+        }
+        //Current problem:
+        //It only go's thru the itteration once.
 
         //and a door in the middle wall with a random y position
         //TODO:experiment with changing the location and the Pens.White below
