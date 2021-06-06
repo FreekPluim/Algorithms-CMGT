@@ -1,6 +1,7 @@
 using System.Drawing;
 using GXPEngine;
 using GXPEngine.OpenGL;
+using System.Threading;
 
 /**
  * This is the main 'game' for the Algorithms Assignment that accompanies the Algorithms course.
@@ -26,7 +27,7 @@ class AlgorithmsAssignment : Game
 	PathFinder _pathFinder = null;
 
 	//common settings
-	private const int SCALE = 20;				//TODO: experiment with changing this
+	private const int SCALE = 30;				//TODO: experiment with changing this
 	private const int MIN_ROOM_SIZE = 8;		//TODO: use this setting in your dungeon generator
 
 	public AlgorithmsAssignment() : base(800, 600, false, true, -1, -1, false)
@@ -97,7 +98,8 @@ class AlgorithmsAssignment : Game
 			//assign the SCALE we talked about above, so that it no longer looks like a tinietiny stamp:
 			_dungeon.scale = SCALE;
 			//Tell the dungeon to generate rooms and doors with the given MIN_ROOM_SIZE
-			_dungeon.Generate(MIN_ROOM_SIZE);
+			/*new Thread(() => */_dungeon.Generate(MIN_ROOM_SIZE)/*).Start()*/;
+
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////////
@@ -113,7 +115,7 @@ class AlgorithmsAssignment : Game
 		//TODO: Study the SampleDungeonNodeGraph class and try it out below
 		//TODO: Comment out the SampleDungeonNodeGraph again, implement a HighLevelDungeonNodeGraph class and uncomment it below
 
-		//_graph = new SampleDungeonNodeGraph(_dungeon);
+		_graph = new SufficientDungeonNodeGraph(_dungeon);
 		//_graph = new HighLevelDungeonNodeGraph(_dungeon);
 		//_graph = new LowLevelDungeonNodeGraph(_dungeon);
 
@@ -126,7 +128,7 @@ class AlgorithmsAssignment : Game
 		//TODO: Study the SampleNodeGraphAgent class and try it out below
 		//TODO: Comment out the SampleNodeGraphAgent again, implement an OnGraphWayPointAgent class and uncomment it below
 
-		//_agent = new SampleNodeGraphAgent(_graph);
+		_agent = new SampleNodeGraphAgent(_graph);
 		//_agent = new OnGraphWayPointAgent(_graph);
 
 		////////////////////////////////////////////////////////////
